@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>سجّلي صالونك — لي البيت</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold:      #C9A96E;
+      --gold-dark: #B8935A;
+      --gold-light:#E8D5B0;
+      --navy:      #0F1B2D;
+      --navy-mid:  #1A2D45;
+      --white:     #FFFFFF;
+      --gray-50:   #FAFAFA;
+      --gray-100:  #F5F5F5;
+      --gray-300:  #D1D5DB;
+      --gray-500:  #6B7280;
+      --gray-700:  #374151;
+      --success:   #10B981;
+      --error:     #EF4444;
+      --radius:    16px;
+      --shadow:    0 20px 60px rgba(0,0,0,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, #0d2137 100%);
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* خلفية زخرفية */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -30%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(201,169,110,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    .header {
+      text-align: center;
+      padding: 32px 0 28px;
+    }
+    .header .logo-icon {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 4px 12px rgba(201,169,110,0.4));
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .header p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 300;
+    }
+
+    /* ── Progress ────────────────────────────────────── */
+    .progress-wrap {
+      max-width: 480px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative;
+      gap: 6px;
+    }
+    .step-dot .dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      border: 2px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.4);
+      transition: all 0.4s ease;
+      z-index: 2;
+    }
+    .step-dot.active .dot {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--navy);
+      box-shadow: 0 0 20px rgba(201,169,110,0.5);
+    }
+    .step-dot.done .dot {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+    .step-dot .label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      font-weight: 500;
+      transition: color 0.3s;
+      white-space: nowrap;
+    }
+    .step-dot.active .label { color: var(--gold); }
+    .step-dot.done  .label { color: var(--success); }
+    .step-line {
+      height: 2px;
+      flex: 1;
+      background: rgba(255,255,255,0.1);
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .step-line .fill {
+      height: 100%;
+      background: var(--gold);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* ── Card ────────────────────────────────────────── */
+    .card {
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      padding: 24px 28px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .card-header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .card-header p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+    }
+    .card-body { padding: 28px; }
+
+    /* ── Form fields ─────────────────────────────────── */
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 8px;
+    }
+    .field label span { color: var(--error); margin-right: 2px; }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--gray-300);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'Tajawal', sans-serif;
+      color: var(--gray-700);
+      background: var(--gray-50);
+      transition: all 0.25s ease;
+      outline: none;
+      direction: rtl;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--gold);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.15);
+    }
+    .field textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+    .field .hint {
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-top: 5px;
+    }
+
+    /* Phone field */
+    .phone-wrap {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .phone-prefix {
+      background: var(--gray-100);
+      border: 1.5px solid var(--gray-300);
+      border-radius: 10px;
+      padding: 13px 14px;
+      font-size: 14px;
+      color: var(--gray-700);
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* File upload */
+    .upload-zone {
+      border: 2px dashed var(--gray-300);
+      border-radius: 10px;
+      padding: 28px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: var(--gray-50);
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--gold);
+      background: rgba(201,169,110,0.05);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .upload-zone .upload-icon { font-size: 36px; margin-bottom: 10px; }
+    .upload-zone .upload-text { font-size: 13px; color: var(--gray-500); }
+    .upload-zone .upload-text strong { color: var(--gold); }
+    .upload-preview {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: rgba(16,185,129,0.08);
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    .upload-preview.visible { display: flex; }
+    .upload-preview .file-name { font-size: 13px; color: var(--success); font-weight: 500; }
+
+    /* Plans */
+    .plans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .plan-card {
+      border: 2px solid var(--gray-300);
+      border-radius: 12px;
+      padding: 16px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      background: white;
+      position: relative;
+    }
+    .plan-card:hover { border-color: var(--gold); }
+    .plan-card input[type="radio"] { display: none; }
+    .plan-card.selected {
+      border-color: var(--gold);
+      background: rgba(201,169,110,0.06);
+    }
+    .plan-card .badge {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .plan-name { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .plan-price { font-size: 22px; font-weight: 800; color: var(--gold); }
+    .plan-price span { font-size: 12px; font-weight: 400; color: var(--gray-500); }
+    .plan-duration { font-size: 11px; color: var(--gray-500); margin-top: 3px; }
+
+    /* ── Buttons ─────────────────────────────────────── */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Tajawal', sans-serif;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: var(--navy);
+      box-shadow: 0 4px 20px rgba(201,169,110,0.4);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(201,169,110,0.5);
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      transform: none;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+    .btn-secondary:hover { background: var(--gray-300); }
+
+    /* ── Success screen ──────────────────────────────── */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 48px 28px;
+    }
+    .success-screen .check {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--success), #059669);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 36px;
+      box-shadow: 0 8px 30px rgba(16,185,129,0.35);
+      animation: popIn 0.5s ease;
+    }
+    @keyframes popIn {
+      0%   { transform: scale(0); }
+      70%  { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .success-screen h2 { font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+    .success-screen p  { font-size: 14px; color: var(--gray-500); line-height: 1.7; }
+    .success-screen .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 13px 28px;
+      background: #25D366;
+      color: white;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+      transition: all 0.25s;
+    }
+    .success-screen .wa-btn:hover { transform: translateY(-1px); }
+
+    /* ── Error msg ───────────────────────────────────── */
+    .error-msg {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--error);
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    /* ── Spinner ─────────────────────────────────────── */
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(15,27,45,0.3);
+      border-top-color: var(--navy);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Mobile ──────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .plans-grid { grid-template-columns: 1fr; }
+      .header h1  { font-size: 24px; }
+      .card-body  { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <span class="logo-icon">💅</span>
+    <h1>لي البيت</h1>
+    <p>سجّلي صالونك وابدأي استقبال العملاء اليوم</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="step-dot active" id="dot1">
+      <div class="dot">1</div>
+      <div class="label">معلوماتك</div>
+    </div>
+    <div class="step-line"><div class="fill" id="line1"></div></div>
+    <div class="step-dot" id="dot2">
+      <div class="dot">2</div>
+      <div class="label">الموقع</div>
+    </div>
+    <div class="step-line"><div class="fill" id="line2"></div></div>
+    <div class="step-dot" id="dot3">
+      <div class="dot">3</div>
+      <div class="label">الباقة</div>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="card" id="mainCard">
+
+    <!-- ── STEP 1 ── -->
+    <div id="step1">
+      <div class="card-header">
+        <h2>معلومات الصالون 🌸</h2>
+        <p>نبدأ بالتعرف عليكِ</p>
+      </div>
+      <div class="card-body">
+        <div class="error-msg" id="err1"></div>
+
+        <div class="field">
+          <label>اسم الصالون <span>*</span></label>
+          <input type="text" id="name" placeholder="مثال: صالون ليلى المنزلي" />
+        </div>
+
+        <div class="field">
+          <label>اسم المالكة <span>*</span></label>
+          <input type="text" id="owner_name" placeholder="الاسم الكامل" />
+        </div>
+
+        <div class="field">
+          <label>رقم الواتساب <span>*</span></label>
+          <div class="phone-wrap">
+            <span class="phone-prefix">🇸🇦 +966</span>
+            <input type="tel" id="whatsapp" placeholder="5XXXXXXXX" maxlength="9" />
+          </div>
+          <div class="hint">أدخلي الرقم بدون الصفر — مثال: 512345678</div>
+        </div>
+
+        <div class="field">
+          <label>المدينة <span>*</span></label>
+          <select id="city">
+            <option value="">اختاري المدينة</option>
+            <option>الرياض</option>
+            <option>جدة</option>
+            <option>مكة المكرمة</option>
+            <option>المدينة المنورة</option>
+            <option>الدمام</option>
+            <option>الخبر</option>
+            <option>الظهران</option>
+            <option>تبوك</option>
+            <option>أبها</option>
+            <option>القصيم</option>
+            <option>حائل</option>
+            <option>جازان</option>
+            <option>نجران</option>
+            <option>الباحة</option>
+            <option>سكاكا</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>الحي <span>*</span></label>
+          <input type="text" id="area" placeholder="مثال: حي النزهة" />
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goStep2()">التالي ←</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STEP 2 ── -->
+    <div id="step2" style="display:none">
+      <div class="card-header">
+        <h2>الموقع والتوثيق 📍</h2>
+        <p>لنتمكن من إيجادكِ بسهولة</p>
+      </div>
+      <div class="card-body">
+        <div class="error-msg" id="err2"></div>
+
+        <div class="field">
+          <label>رابط موقعكِ على خرائط Google <span>*</span></label>
+          <input type="url" id="map_url" placeholder="https://maps.google.com/..." dir="ltr" />
+          <div class="hint">افتحي خرائط Google → ابحثي عن بيتكِ → اضغطي مشاركة → انسخي الرابط</div>
+        </div>
+
+        <div class="field">
+          <label>صورة البطاقة المدنية <span>*</span></label>
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="idCardFile" accept="image/*,.pdf" onchange="handleFileSelect(this)" />
+            <div class="upload-icon">🪪</div>
+            <div class="upload-text">
+              <strong>اضغطي هنا</strong> لرفع صورة البطاقة<br/>
+              JPG, PNG أو PDF — بحد أقصى 5MB
+            </div>
+          </div>
+          <div class="upload-preview" id="uploadPreview">
+            <span>✅</span>
+            <span class="file-name" id="fileName"></span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goStep3()">التالي ←</button>
+          <button class="btn btn-secondary" onclick="goBack(1)">→ رجوع</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STEP 3 ── -->
+    <div id="step3" style="display:none">
+      <div class="card-header">
+        <h2>الخدمات والباقة 💎</h2>
+        <p>آخر خطوة وتصبحين جزءاً من لي البيت</p>
+      </div>
+      <div class="card-body">
+        <div class="error-msg" id="err3"></div>
+
+        <div class="field">
+          <label>خدماتكِ وأسعارها <span>*</span></label>
+          <textarea id="services" placeholder="مثال:&#10;قص شعر - 80&#10;صبغة كاملة - 200&#10;مكياج سهرة - 150&#10;تمديد أظافر - 120"></textarea>
+          <div class="hint">اكتبي كل خدمة في سطر مستقل مع سعرها بالريال</div>
+        </div>
+
+        <div class="field">
+          <label>اختاري باقتكِ <span>*</span></label>
+          <div class="plans-grid">
+
+            <label class="plan-card" id="plan-monthly" onclick="selectPlan('monthly', this)">
+              <input type="radio" name="plan" value="monthly" />
+              <div class="plan-name">شهرية</div>
+              <div class="plan-price">99 <span>ر.س</span></div>
+              <div class="plan-duration">30 يوماً</div>
+            </label>
+
+            <label class="plan-card" id="plan-quarterly" onclick="selectPlan('quarterly', this)">
+              <input type="radio" name="plan" value="quarterly" />
+              <div class="badge">الأكثر طلباً</div>
+              <div class="plan-name">ربعية</div>
+              <div class="plan-price">249 <span>ر.س</span></div>
+              <div class="plan-duration">90 يوماً</div>
+            </label>
+
+            <label class="plan-card" id="plan-annual" onclick="selectPlan('annual', this)">
+              <input type="radio" name="plan" value="annual" />
+              <div class="plan-name">سنوية</div>
+              <div class="plan-price">799 <span>ر.س</span></div>
+              <div class="plan-duration">365 يوماً</div>
+            </label>
+
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">
+            أرسلي الطلب 🤍
+          </button>
+          <button class="btn btn-secondary" onclick="goBack(2)">→ رجوع</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SUCCESS ── -->
+    <div class="success-screen" id="successScreen">
+      <div class="check">✓</div>
+      <h2>تم استلام طلبكِ! 🎉</h2>
+      <p>
+        شكراً لكِ 🤍<br/>
+        سنتواصل معكِ على واتساب خلال دقائق<br/>
+        لإتمام التفعيل ودفع الاشتراك
+      </p>
+      <a href="#" class="wa-btn" id="waLink">
+        <span>💬</span> تواصلي معنا
+      </a>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- Footer -->
+  <div style="text-align:center; margin-top:32px; color:rgba(255,255,255,0.3); font-size:12px;">
+    لي البيت 🤍 — جميع الحقوق محفوظة
+  </div>
+
+<script>
+  // ── Config ────────────────────────────────────────────────────────
+  const SUPABASE_URL      = 'https://efyluvxcjchynqzytqrf.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmeWx1dnhjamNoeW5xenl0cXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTg5NjUsImV4cCI6MjA5NDI3NDk2NX0.GisojutOM_VYqatjK8GUxvXO31urFlx9kTW1qriLmQI';
+  const FUNCTION_URL      = `${SUPABASE_URL}/functions/v1/register-provider`;
+
+  let selectedPlan   = '';
+  let idCardUrl      = '';
+  let currentStep    = 1;
+
+  // ── Navigation ────────────────────────────────────────────────────
+  function goStep2() {
+    const name       = v('name');
+    const owner_name = v('owner_name');
+    const whatsapp   = v('whatsapp');
+    const city       = v('city');
+    const area       = v('area');
+
+    if (!name || !owner_name || !whatsapp || !city || !area) {
+      showErr('err1', 'يرجى ملء جميع الحقول المطلوبة');
+      return;
+    }
+    if (!/^5\d{8}$/.test(whatsapp)) {
+      showErr('err1', 'رقم الواتساب غير صحيح — يجب أن يبدأ بـ 5 ويتكون من 9 أرقام');
+      return;
+    }
+    hideErr('err1');
+    show('step2'); hide('step1');
+    updateProgress(2);
+  }
+
+  function goStep3() {
+    const map_url = v('map_url');
+    if (!map_url) {
+      showErr('err2', 'يرجى إدخال رابط الخريطة');
+      return;
+    }
+    if (!idCardUrl) {
+      showErr('err2', 'يرجى رفع صورة البطاقة المدنية');
+      return;
+    }
+    hideErr('err2');
+    show('step3'); hide('step2');
+    updateProgress(3);
+  }
+
+  function goBack(to) {
+    if (to === 1) { show('step1'); hide('step2'); updateProgress(1); }
+    if (to === 2) { show('step2'); hide('step3'); updateProgress(2); }
+  }
+
+  // ── Plan selection ────────────────────────────────────────────────
+  function selectPlan(plan, el) {
+    selectedPlan = plan;
+    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // ── File upload → Supabase Storage ───────────────────────────────
+  async function handleFileSelect(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showErr('err2', 'حجم الملف كبير جداً — الحد الأقصى 5MB');
+      return;
+    }
+
+    document.getElementById('fileName').textContent = 'جاري الرفع...';
+    document.getElementById('uploadPreview').classList.add('visible');
+
+    const ext      = file.name.split('.').pop();
+    const filename = `id_${Date.now()}.${ext}`;
+    const path     = `id-cards/${filename}`;
+
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${path}`, {
+      method:  'POST',
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type':  file.type,
+      },
+      body: file,
+    });
+
+    if (res.ok) {
+      idCardUrl = `${SUPABASE_URL}/storage/v1/object/public/${path}`;
+      document.getElementById('fileName').textContent = file.name;
+      hideErr('err2');
+    } else {
+      document.getElementById('uploadPreview').classList.remove('visible');
+      showErr('err2', 'فشل رفع الملف — حاولي مرة أخرى');
+    }
+  }
+
+  // ── Submit ────────────────────────────────────────────────────────
+  async function submitForm() {
+    if (!selectedPlan) {
+      showErr('err3', 'يرجى اختيار الباقة المناسبة');
+      return;
+    }
+    const services = v('services');
+    if (!services) {
+      showErr('err3', 'يرجى كتابة خدماتكِ وأسعارها');
+      return;
+    }
+    hideErr('err3');
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled    = true;
+    btn.innerHTML   = 'جاري الإرسال <span class="spinner"></span>';
+
+    const payload = {
+      sector:      'salons',
+      name:        v('name'),
+      owner_name:  v('owner_name'),
+      whatsapp:    '966' + v('whatsapp'),
+      city:        v('city'),
+      area:        v('area'),
+      map_url:     v('map_url'),
+      id_card_url: idCardUrl,
+      services,
+      plan:        selectedPlan,
+    };
+
+    try {
+      const res = await fetch(FUNCTION_URL, {
+        method:  'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        showSuccess(payload.whatsapp);
+      } else {
+        const err = await res.text();
+        showErr('err3', 'حدث خطأ أثناء الإرسال — حاولي مرة أخرى');
+        btn.disabled  = false;
+        btn.innerHTML = 'أرسلي الطلب 🤍';
+      }
+    } catch (e) {
+      showErr('err3', 'تعذر الاتصال بالخادم — تحققي من الإنترنت');
+      btn.disabled  = false;
+      btn.innerHTML = 'أرسلي الطلب 🤍';
+    }
+  }
+
+  // ── Success ───────────────────────────────────────────────────────
+  function showSuccess(whatsapp) {
+    hide('step3');
+    document.getElementById('successScreen').style.display = 'block';
+    document.getElementById('waLink').href =
+      `https://wa.me/966XXXXXXXXX?text=أهلاً، أنا ${encodeURIComponent(v('owner_name'))} سجّلت للتو في لي البيت 🤍`;
+    updateProgress(4);
+  }
+
+  // ── Progress ──────────────────────────────────────────────────────
+  function updateProgress(step) {
+    currentStep = step;
+    ['dot1','dot2','dot3'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.classList.remove('active','done');
+      if (i + 1 < step)  el.classList.add('done');
+      if (i + 1 === step) el.classList.add('active');
+    });
+    document.getElementById('line1').style.width = step >= 2 ? '100%' : '0%';
+    document.getElementById('line2').style.width = step >= 3 ? '100%' : '0%';
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────
+  const v    = id => document.getElementById(id)?.value?.trim() ?? '';
+  const show = id => document.getElementById(id).style.display = '';
+  const hide = id => document.getElementById(id).style.display = 'none';
+  const showErr = (id, msg) => {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+  const hideErr = id => document.getElementById(id).style.display = 'none';
+
+  // Drag and drop
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      document.getElementById('idCardFile').files = e.dataTransfer.files;
+      handleFileSelect(document.getElementById('idCardFile'));
+    }
+  });
+</script>
+</body>
+</html>
