@@ -514,6 +514,7 @@
     .success-check {
       width: 84px; height: 84px;
       background: var(--gray-600);
+      color: white;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -645,7 +646,7 @@
         لي البيت
         <span>Le AlBayt</span>
       </div>
-      <p class="side-tagline">
+      <p class="side-tagline" id="sideTagline">
         منصتك الذكية لاستقبال العملاء وإدارة صالونك المنزلي في الكويت
       </p>
 
@@ -711,19 +712,19 @@
       <div id="step1">
         <div class="section-head">
           <div class="tag">01 — معلوماتك</div>
-          <h2>معلومات صالونك</h2>
-          <p>نبدأ نتعرف عليكِ — كل هالمعلومات سرية ومحفوظة</p>
+          <h2 id="sectionH2">معلومات صالونك</h2>
+          <p id="sectionSub">نبدأ نتعرف عليكِ — كل هالمعلومات سرية ومحفوظة</p>
         </div>
 
         <div class="error-msg" id="err1"></div>
 
         <div class="field">
-          <label>اسم الصالون <span class="req">*</span></label>
+          <label><span id="labelName">اسم الصالون</span> <span class="req">*</span></label>
           <input type="text" id="name" placeholder="مثال: صالون نورة المنزلي" />
         </div>
 
         <div class="field">
-          <label>اسم المالكة <span class="req">*</span></label>
+          <label><span id="labelOwner">اسم المالكة</span> <span class="req">*</span></label>
           <input type="text" id="owner_name" placeholder="اسمك الكامل" />
         </div>
 
@@ -835,7 +836,7 @@
             <div class="plan-badge">الباقة الشهرية</div>
             <div class="plan-price-wrap">
               <span class="plan-currency">د.ك</span>
-              <span class="plan-price">15</span>
+              <span class="plan-price" id="planPrice">15</span>
             </div>
             <div class="plan-period">شهرياً — يُجدد تلقائياً</div>
             <div class="plan-trial">
@@ -887,6 +888,62 @@
   let idCardUrl    = '';
   let currentStep  = 1;
   let selectedAreas = [];
+
+  // ── Sector Configuration ─────────────────────────────────
+  const SECTOR_CONFIG = {
+    salons: {
+      title:               'انضمي لعائلة لي البيت — سجّلي صالونك',
+      mobileTitle:         'لي البيت',
+      formTitle:           'معلومات صالونك',
+      formSubtitle:        'نبدأ نتعرف عليكِ — كل هالمعلومات سرية ومحفوظة',
+      nameLabel:           'اسم الصالون',
+      namePlaceholder:     'مثال: صالون نورة المنزلي',
+      ownerLabel:          'اسم المالكة',
+      ownerPlaceholder:    'اسمك الكامل',
+      servicesPlaceholder: 'مثال:\nقص شعر - 8\nصبغة كاملة - 20\nمكياج سهرة - 15\nتمديد أظافر - 12',
+      planPrice:           15,
+      sideTagline:         'منصتك الذكية لاستقبال العملاء وإدارة صالونك المنزلي في الكويت',
+    },
+    cleaning: {
+      title:               'انضم لعائلة لي البيت — سجّل خدمات التنظيف',
+      mobileTitle:         'لي البيت — تنظيف',
+      formTitle:           'معلومات شركتك',
+      formSubtitle:        'نبدأ نتعرف عليك — كل هالمعلومات سرية ومحفوظة',
+      nameLabel:           'اسم الشركة / مقدم الخدمة',
+      namePlaceholder:     'مثال: شركة الصفاء للتنظيف',
+      ownerLabel:          'اسم المسؤول',
+      ownerPlaceholder:    'الاسم الكامل',
+      servicesPlaceholder: 'مثال:\nتنظيف شقة كاملة - 30\nغسيل سجاد - 15\nتنظيف نوافذ - 10\nتلميع أثاث - 20',
+      planPrice:           20,
+      sideTagline:         'منصتك الذكية لاستقبال طلبات التنظيف وإدارة خدماتك في الكويت',
+    },
+  };
+
+  function getSector() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('sector') === 'cleaning' ? 'cleaning' : 'salons';
+  }
+
+  const CURRENT_SECTOR = getSector();
+  const CFG            = SECTOR_CONFIG[CURRENT_SECTOR];
+
+  // Apply sector config on load
+  document.addEventListener('DOMContentLoaded', () => {
+    document.title = CFG.title;
+    const setTxt = (sel, txt) => { const el = document.querySelector(sel); if (el) el.textContent = txt; };
+    const setPh  = (id,  txt) => { const el = document.getElementById(id); if (el) el.placeholder = txt; };
+
+    setTxt('#sectionH2',   CFG.formTitle);
+    setTxt('#sectionSub',  CFG.formSubtitle);
+    setTxt('#labelName',   CFG.nameLabel);
+    setTxt('#labelOwner',  CFG.ownerLabel);
+    setPh ('name',         CFG.namePlaceholder);
+    setPh ('owner_name',   CFG.ownerPlaceholder);
+    setPh ('services',     CFG.servicesPlaceholder);
+    setTxt('#planPrice',   CFG.planPrice);
+    setTxt('#sideTagline', CFG.sideTagline);
+    setTxt('.mobile-header h1', CFG.mobileTitle);
+  });
 
   function toggleArea(el) {
     const val = el.dataset.val;
@@ -1003,7 +1060,7 @@
     btn.innerHTML  = '<div class="spinner"></div> جاري الإرسال...';
 
     const payload = {
-      sector:      'salons',
+      sector:      CURRENT_SECTOR,
       name:        v('name'),
       owner_name:  v('owner_name'),
       whatsapp:    '965' + v('whatsapp'),
@@ -1041,7 +1098,7 @@
     hide('step3');
     document.getElementById('successScreen').style.display = 'block';
     document.getElementById('waLink').href =
-      `https://wa.me/96555646033?text=${encodeURIComponent('هلا، أنا ' + v('owner_name') + ' سجّلت للتو في لي البيت 🤍')}`;
+      `https://wa.me/96550630611?text=${encodeURIComponent('هلا، أنا ' + v('owner_name') + ' سجّلت للتو في لي البيت 🤍')}`;
     updateProgress(4);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
