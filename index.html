@@ -778,7 +778,17 @@
               <div class="sector-icon">🍲</div>
               <div class="sector-label">طبخ منزلي</div>
             </div>
+            <div class="sector-option" data-slug="other"    onclick="selectSector(this, 'other')">
+              <div class="sector-icon">✨</div>
+              <div class="sector-label">أخرى</div>
+            </div>
           </div>
+        </div>
+
+        <div class="field" id="otherTypeField" style="display:none">
+          <label>حدد نوع خدمتك <span class="req">*</span></label>
+          <input type="text" id="otherType" placeholder="مثال: تنسيق حدائق، تركيب أثاث، صيانة..." />
+          <div class="hint">اكتب وصف مختصر لنوع الخدمة اللي تقدمها</div>
         </div>
 
         <div class="field">
@@ -1015,6 +1025,19 @@
       planPrice:           18,
       planName:            'الباقة الشهرية - طبخ',
     },
+    other: {
+      label:               'خدمة أخرى',
+      icon:                '✨',
+      formTitle:           'معلومات خدمتك',
+      nameLabel:           'اسم النشاط / الخدمة',
+      namePlaceholder:     'مثال: تنسيق حدائق منزلية',
+      ownerLabel:          'اسم المسؤول',
+      ownerPlaceholder:    'الاسم الكامل',
+      servicesPlaceholder: 'اكتب الخدمات والأسعار، كل خدمة في سطر:\nمثال:\nالخدمة 1 - 10\nالخدمة 2 - 20',
+      planPrice:           15,
+      planName:            'الباقة الشهرية',
+      isOther:             true,
+    },
   };
 
   let CURRENT_SECTOR = 'salons';
@@ -1044,6 +1067,10 @@
     setPh ('services',     CFG.servicesPlaceholder);
     setTxt('#planPrice',   CFG.planPrice);
     setTxt('#planName',    CFG.planName);
+
+    // إظهار/إخفاء حقل "حدد نوع الخدمة" عند اختيار "أخرى"
+    const otherField = document.getElementById('otherTypeField');
+    if (otherField) otherField.style.display = CFG.isOther ? '' : 'none';
   }
 
   function selectSector(el, slug) {
@@ -1097,6 +1124,10 @@
 
     if (!name || !owner_name || !whatsapp || selectedAreas.length === 0) {
       showErr('err1', 'يرجى ملء جميع الحقول المطلوبة واختيار منطقة واحدة على الأقل');
+      return;
+    }
+    if (CFG.isOther && !v('otherType')) {
+      showErr('err1', 'حددي نوع الخدمة في الحقل المخصص');
       return;
     }
     if (!/^\d{8}$/.test(whatsapp)) {
@@ -1175,6 +1206,7 @@
 
     const payload = {
       sector:      CURRENT_SECTOR,
+      custom_type: CFG.isOther ? v('otherType') : null,
       name:        v('name'),
       owner_name:  v('owner_name'),
       whatsapp:    '965' + v('whatsapp'),
