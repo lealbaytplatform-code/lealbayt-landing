@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>انضمي لعائلة لي البيت — سجّلي صالونك</title>
+  <title>سجّل خدمتك في لي البيت — Le AlBayt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
   <style>
@@ -574,6 +574,43 @@
       letter-spacing: 0.3px;
     }
 
+    /* ── Sector selector ─────────────────────────────────── */
+    .sectors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+      gap: 10px;
+    }
+    .sector-option {
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--gray-50);
+      user-select: none;
+    }
+    .sector-option:hover {
+      border-color: var(--gray-400);
+      background: white;
+    }
+    .sector-option.selected {
+      border-color: var(--gray-600);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(107,114,128,0.10);
+    }
+    .sector-icon {
+      font-size: 28px;
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+    .sector-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gray-600);
+    }
+    .sector-option.selected .sector-label { color: var(--gray-700); }
+
     /* ── Areas multi-select ─────────────────────────────── */
     .areas-wrap {
       border: 1.5px solid var(--gray-200);
@@ -647,7 +684,7 @@
         <span>Le AlBayt</span>
       </div>
       <p class="side-tagline" id="sideTagline">
-        منصتك الذكية لاستقبال العملاء وإدارة صالونك المنزلي في الكويت
+        منصتك الذكية لاستقبال العملاء وإدارة خدماتك المنزلية في الكويت
       </p>
 
       <div class="side-features">
@@ -713,10 +750,36 @@
         <div class="section-head">
           <div class="tag">01 — معلوماتك</div>
           <h2 id="sectionH2">معلومات صالونك</h2>
-          <p id="sectionSub">نبدأ نتعرف عليكِ — كل هالمعلومات سرية ومحفوظة</p>
+          <p id="sectionSub">نبدأ نتعرف عليج — كل هالمعلومات سرية ومحفوظة</p>
         </div>
 
         <div class="error-msg" id="err1"></div>
+
+        <div class="field">
+          <label>نوع الخدمة <span class="req">*</span></label>
+          <div class="sectors-grid">
+            <div class="sector-option" data-slug="salons"   onclick="selectSector(this, 'salons')">
+              <div class="sector-icon">💇‍♀️</div>
+              <div class="sector-label">صالون منزلي</div>
+            </div>
+            <div class="sector-option" data-slug="cleaning" onclick="selectSector(this, 'cleaning')">
+              <div class="sector-icon">🧽</div>
+              <div class="sector-label">تنظيف منازل</div>
+            </div>
+            <div class="sector-option" data-slug="maids"    onclick="selectSector(this, 'maids')">
+              <div class="sector-icon">🧹</div>
+              <div class="sector-label">خادمات</div>
+            </div>
+            <div class="sector-option" data-slug="massage"  onclick="selectSector(this, 'massage')">
+              <div class="sector-icon">💆‍♀️</div>
+              <div class="sector-label">مساج وعلاج</div>
+            </div>
+            <div class="sector-option" data-slug="cooking"  onclick="selectSector(this, 'cooking')">
+              <div class="sector-icon">🍲</div>
+              <div class="sector-label">طبخ منزلي</div>
+            </div>
+          </div>
+        </div>
 
         <div class="field">
           <label><span id="labelName">اسم الصالون</span> <span class="req">*</span></label>
@@ -833,7 +896,7 @@
         <div class="field">
           <label>باقة الاشتراك</label>
           <div class="plan-single">
-            <div class="plan-badge">الباقة الشهرية</div>
+            <div class="plan-badge" id="planName">الباقة الشهرية</div>
             <div class="plan-price-wrap">
               <span class="plan-currency">د.ك</span>
               <span class="plan-price" id="planPrice">15</span>
@@ -893,57 +956,107 @@
   // ── Sector Configuration ─────────────────────────────────
   const SECTOR_CONFIG = {
     salons: {
-      title:               'انضمي لعائلة لي البيت — سجّلي صالونك',
-      mobileTitle:         'لي البيت',
+      label:               'صالون منزلي',
+      icon:                '💇‍♀️',
       formTitle:           'معلومات صالونك',
-      formSubtitle:        'نبدأ نتعرف عليكِ — كل هالمعلومات سرية ومحفوظة',
       nameLabel:           'اسم الصالون',
       namePlaceholder:     'مثال: صالون نورة المنزلي',
       ownerLabel:          'اسم المالكة',
-      ownerPlaceholder:    'اسمك الكامل',
+      ownerPlaceholder:    'اسمج الكامل',
       servicesPlaceholder: 'مثال:\nقص شعر - 8\nصبغة كاملة - 20\nمكياج سهرة - 15\nتمديد أظافر - 12',
       planPrice:           15,
-      sideTagline:         'منصتك الذكية لاستقبال العملاء وإدارة صالونك المنزلي في الكويت',
+      planName:            'الباقة الشهرية - صالون',
     },
     cleaning: {
-      title:               'انضم لعائلة لي البيت — سجّل خدمات التنظيف',
-      mobileTitle:         'لي البيت — تنظيف',
-      formTitle:           'معلومات شركتك',
-      formSubtitle:        'نبدأ نتعرف عليك — كل هالمعلومات سرية ومحفوظة',
+      label:               'تنظيف منازل',
+      icon:                '🧽',
+      formTitle:           'معلومات شركة التنظيف',
       nameLabel:           'اسم الشركة / مقدم الخدمة',
       namePlaceholder:     'مثال: شركة الصفاء للتنظيف',
       ownerLabel:          'اسم المسؤول',
       ownerPlaceholder:    'الاسم الكامل',
       servicesPlaceholder: 'مثال:\nتنظيف شقة كاملة - 30\nغسيل سجاد - 15\nتنظيف نوافذ - 10\nتلميع أثاث - 20',
       planPrice:           20,
-      sideTagline:         'منصتك الذكية لاستقبال طلبات التنظيف وإدارة خدماتك في الكويت',
+      planName:            'الباقة الشهرية - تنظيف',
+    },
+    maids: {
+      label:               'خادمات / مساعدات',
+      icon:                '🧹',
+      formTitle:           'معلومات مكتب الخادمات',
+      nameLabel:           'اسم المكتب',
+      namePlaceholder:     'مثال: مكتب الأمانة للخدمات المنزلية',
+      ownerLabel:          'اسم المسؤول',
+      ownerPlaceholder:    'الاسم الكامل',
+      servicesPlaceholder: 'مثال:\nخادمة بالساعة - 5\nخادمة يومية - 30\nمساعدة طبخ - 15\nمساعدة بمناسبة - 50',
+      planPrice:           25,
+      planName:            'الباقة الشهرية - خادمات',
+    },
+    massage: {
+      label:               'مساج وعلاج طبيعي',
+      icon:                '💆‍♀️',
+      formTitle:           'معلومات خدمتك',
+      nameLabel:           'اسم مقدم الخدمة',
+      namePlaceholder:     'مثال: مركز الراحة للمساج',
+      ownerLabel:          'اسم المسؤول',
+      ownerPlaceholder:    'الاسم الكامل',
+      servicesPlaceholder: 'مثال:\nمساج كامل - 25\nمساج للظهر - 12\nمساج للأقدام - 8\nعلاج طبيعي - 30',
+      planPrice:           18,
+      planName:            'الباقة الشهرية - مساج',
+    },
+    cooking: {
+      label:               'طبخ منزلي',
+      icon:                '🍲',
+      formTitle:           'معلومات خدمات الطبخ',
+      nameLabel:           'اسم المطبخ / الشيف',
+      namePlaceholder:     'مثال: مطبخ أم خالد',
+      ownerLabel:          'اسم المالك',
+      ownerPlaceholder:    'الاسم الكامل',
+      servicesPlaceholder: 'مثال:\nوجبة عائلية كبيرة - 15\nمندي لحم - 25\nحلويات شعبية - 10\nمناسبات - 100',
+      planPrice:           18,
+      planName:            'الباقة الشهرية - طبخ',
     },
   };
 
-  function getSector() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('sector') === 'cleaning' ? 'cleaning' : 'salons';
+  let CURRENT_SECTOR = 'salons';
+  let CFG            = SECTOR_CONFIG.salons;
+
+  // Initial preselection from URL (optional)
+  const _initialParams = new URLSearchParams(window.location.search);
+  const _initialSector = _initialParams.get('sector');
+  if (_initialSector && SECTOR_CONFIG[_initialSector]) {
+    CURRENT_SECTOR = _initialSector;
+    CFG            = SECTOR_CONFIG[_initialSector];
   }
 
-  const CURRENT_SECTOR = getSector();
-  const CFG            = SECTOR_CONFIG[CURRENT_SECTOR];
+  function applySector(slug) {
+    if (!SECTOR_CONFIG[slug]) return;
+    CURRENT_SECTOR = slug;
+    CFG            = SECTOR_CONFIG[slug];
 
-  // Apply sector config on load
-  document.addEventListener('DOMContentLoaded', () => {
-    document.title = CFG.title;
     const setTxt = (sel, txt) => { const el = document.querySelector(sel); if (el) el.textContent = txt; };
     const setPh  = (id,  txt) => { const el = document.getElementById(id); if (el) el.placeholder = txt; };
 
     setTxt('#sectionH2',   CFG.formTitle);
-    setTxt('#sectionSub',  CFG.formSubtitle);
     setTxt('#labelName',   CFG.nameLabel);
     setTxt('#labelOwner',  CFG.ownerLabel);
     setPh ('name',         CFG.namePlaceholder);
     setPh ('owner_name',   CFG.ownerPlaceholder);
     setPh ('services',     CFG.servicesPlaceholder);
     setTxt('#planPrice',   CFG.planPrice);
-    setTxt('#sideTagline', CFG.sideTagline);
-    setTxt('.mobile-header h1', CFG.mobileTitle);
+    setTxt('#planName',    CFG.planName);
+  }
+
+  function selectSector(el, slug) {
+    document.querySelectorAll('.sector-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    applySector(slug);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applySector(CURRENT_SECTOR);
+    // Mark current in UI if exists
+    const initial = document.querySelector(`.sector-option[data-slug="${CURRENT_SECTOR}"]`);
+    if (initial) initial.classList.add('selected');
   });
 
   function toggleArea(el) {
